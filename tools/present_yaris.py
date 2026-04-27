@@ -11,15 +11,15 @@ sys.path.insert(0, os.path.dirname(__file__))
 from full_present import generate_all_audio, build_html
 
 # === Yaris Cross 簡報內容 ===
-# 各頁對應的小峰角色圖（相對 slides/）
+# 各頁對應的小峰角色圖（相對 slides/，去背版）
 CAT_IMG = {
-    "intro": "xiaofeng_car_intro_20260427_184045.png",
-    "levels": "xiaofeng_car_levels_20260427_184124.png",
-    "engine": "xiaofeng_car_engine_20260427_184214.png",
-    "parking": "xiaofeng_car_parking_20260427_184307.png",
-    "safety": "xiaofeng_car_safety_20260427_184348.png",
-    "advice": "xiaofeng_car_advice_20260427_184414.png",
-    "ending": "xiaofeng_car_ending_20260427_184449.png",
+    "intro": "xiaofeng_car_intro_20260427_184045_nobg.png",
+    "levels": "xiaofeng_car_levels_20260427_184124_nobg.png",
+    "engine": "xiaofeng_car_engine_20260427_184214_nobg.png",
+    "parking": "xiaofeng_car_parking_20260427_184307_nobg.png",
+    "safety": "xiaofeng_car_safety_20260427_184348_nobg.png",
+    "advice": "xiaofeng_car_advice_20260427_184414_nobg.png",
+    "ending": "xiaofeng_car_ending_20260427_184449_nobg.png",
 }
 
 SLIDES = [
@@ -121,6 +121,9 @@ full_present.SLIDES = SLIDES
 
 def apply_toyota_theme(html: str) -> str:
     """把淡藍主題換成 Toyota 紅藍深色主題"""
+    # 先換網頁標題
+    html = html.replace("<title>小峰自我介紹</title>", "<title>Yaris Cross 播報</title>")
+
     replacements = [
         # 整體背景（淡藍漸層 → 深炭黑）
         ("linear-gradient(135deg, #dbeeff 0%, #c8e8ff 50%, #d4eeff 100%)",
@@ -189,15 +192,19 @@ def apply_toyota_theme(html: str) -> str:
         ("color: #5577aa;\n    font-size: 18px;",
          "color: #a8b8d0;\n    font-size: 18px;"),
 
-        # 頭像框背景
+        # 頭像框背景 (透明 — 因為圖已去背)
         ("background: linear-gradient(135deg, #eef6ff, #d8ecff);",
-         "background: linear-gradient(135deg, #2a3040, #1a1f2c);"),
+         "background: transparent;"),
 
         ("border: 3px solid rgba(91,168,255,0.3);",
-         "border: 3px solid rgba(235,10,30,0.4);"),
+         "border: none;"),
 
         ("box-shadow: 0 8px 32px rgba(91,168,255,0.2);",
-         "box-shadow: 0 8px 32px rgba(235,10,30,0.25);"),
+         "box-shadow: 0 12px 40px rgba(235,10,30,0.25);"),
+
+        # cat 圖在卡片內保持 contain（不裁切）
+        (".cat-image img {\n    width: 100%; height: 100%;\n    object-fit: cover;\n  }",
+         ".cat-image img {\n    width: 100%; height: 100%;\n    object-fit: contain;\n    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));\n  }"),
 
         # 進度條
         ("background: linear-gradient(90deg, #5ba8ff, #89c8ff);",
