@@ -113,11 +113,12 @@ def render_slide(slide, idx, total, image_path=None, scene_path=None):
         """
 
     elif slide["type"] == "ending":
+        ending_image = "xiaofeng_ending_20260427_132940.png"
         return f"""
         <div class="slide ending-slide" {bg_style}>
           <div class="ending-overlay"></div>
           <div class="ending-content">
-            <div class="big-emoji">🐱</div>
+            <div class="ending-image"><img src="{ending_image}" alt="小峰"></div>
             <h1>{slide['title']}</h1>
             <div class="subtitle">{slide['subtitle']}</div>
           </div>
@@ -493,15 +494,27 @@ def build_html(slides, audio_paths, image_path=None, scene_path=None):
     text-align: center;
   }}
 
-  .big-emoji {{
-    font-size: 120px;
-    margin-bottom: 24px;
-    animation: bounce 1.5s ease infinite;
+  .ending-image {{
+    width: 280px;
+    height: 280px;
+    margin: 0 auto 24px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(91,168,255,0.35);
+    border: 3px solid rgba(255,255,255,0.6);
+    animation: floatUp 3s ease-in-out infinite;
   }}
 
-  @keyframes bounce {{
+  .ending-image img {{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }}
+
+  @keyframes floatUp {{
     0%, 100% {{ transform: translateY(0); }}
-    50% {{ transform: translateY(-15px); }}
+    50% {{ transform: translateY(-10px); }}
   }}
 
   .ending-slide h1 {{
@@ -620,14 +633,6 @@ def build_html(slides, audio_paths, image_path=None, scene_path=None):
 <body>
   <div class="progress" id="progress"></div>
 
-  <div id="startOverlay" class="start-overlay">
-    <div class="start-card">
-      <h2>🐱 小峰準備好了</h2>
-      <p>點擊開始，小峰會自動播放簡報並語音介紹</p>
-      <button class="start-btn" onclick="startPresentation()">開始播放 ▶</button>
-    </div>
-  </div>
-
   <div class="container">
     <div class="slide-wrapper">
       {slides_html}
@@ -702,12 +707,6 @@ def build_html(slides, audio_paths, image_path=None, scene_path=None):
       }}
     }}
 
-    function startPresentation() {{
-      document.getElementById('startOverlay').style.display = 'none';
-      showSlide(0);
-      playAudio(0);
-    }}
-
     // 鍵盤控制
     document.addEventListener('keydown', (e) => {{
       if (e.key === 'ArrowRight' || e.key === ' ') {{ e.preventDefault(); nextSlide(); }}
@@ -715,8 +714,30 @@ def build_html(slides, audio_paths, image_path=None, scene_path=None):
       if (e.key === 'p') togglePlay();
     }});
 
-    // 初始顯示第一頁
+    // 初始顯示第一頁，立刻嘗試自動播放
     showSlide(0);
+    let started = false;
+    function tryAutoStart() {{
+      if (started) return;
+      started = true;
+      playAudio(0);
+    }}
+
+    // 嘗試立刻播放（成功則完成；失敗則等使用者第一次互動）
+    window.addEventListener('load', () => {{
+      const audio = document.getElementById('audio-0');
+      if (audio) {{
+        const promise = audio.play();
+        if (promise !== undefined) {{
+          promise.then(() => {{ started = true; audio.onended = () => {{ if (isPlaying && current < total - 1) setTimeout(() => nextSlide(), 800); }}; }})
+                 .catch(() => {{
+                   // 自動播放被擋下，等任何點擊或按鍵
+                   document.addEventListener('click', tryAutoStart, {{ once: true }});
+                   document.addEventListener('keydown', tryAutoStart, {{ once: true }});
+                 }});
+        }}
+      }}
+    }});
   </script>
 </body>
 </html>"""
