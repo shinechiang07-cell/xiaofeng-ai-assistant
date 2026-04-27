@@ -94,7 +94,10 @@ def render_slide(slide, idx, total, image_path=None, scene_path=None):
 
     if slide["type"] == "intro":
         image_block = ""
-        if image_path and os.path.exists(image_path):
+        # 優先用 SLIDES 裡指定的 cat_image，否則 fallback 到預設角色圖
+        if slide.get("cat_image"):
+            image_block = f'<div class="cat-image"><img src="{slide["cat_image"]}" alt="小峰"></div>'
+        elif image_path and os.path.exists(image_path):
             rel_img = os.path.basename(image_path)
             image_block = f'<div class="cat-image"><img src="{rel_img}" alt="小峰"></div>'
 
@@ -113,7 +116,7 @@ def render_slide(slide, idx, total, image_path=None, scene_path=None):
         """
 
     elif slide["type"] == "ending":
-        ending_image = "xiaofeng_ending_20260427_132940.png"
+        ending_image = slide.get("ending_image_override") or "xiaofeng_ending_20260427_132940.png"
         return f"""
         <div class="slide ending-slide" {bg_style}>
           <div class="ending-overlay"></div>
@@ -145,6 +148,10 @@ def render_slide(slide, idx, total, image_path=None, scene_path=None):
             </div>
             '''
 
+        cat_html = ""
+        if slide.get("cat_image"):
+            cat_html = f'<div class="topic-cat"><img src="{slide["cat_image"]}" alt="小峰"></div>'
+
         return f"""
         <div class="slide topic-slide" {bg_style}>
           <div class="topic-overlay"></div>
@@ -157,6 +164,7 @@ def render_slide(slide, idx, total, image_path=None, scene_path=None):
               {example_html}
             </div>
           </div>
+          {cat_html}
           <div class="page-num">{idx+1} / {total}</div>
         </div>
         """
@@ -178,9 +186,13 @@ def build_html(slides, audio_paths, image_path=None, scene_path=None):
         slides_html += render_slide(slide, i, len(slides), image_path, scene_path)
 
     audio_tags = ""
+    # 找出 audio_paths 中各檔案相對於 slides/ 的路徑
+    slides_dir = Path(__file__).parent.parent / "slides"
     for i, path in enumerate(audio_paths):
-        # 相對路徑：audio/slide_N.mp3
-        rel_audio = "audio/" + os.path.basename(path)
+        try:
+            rel_audio = os.path.relpath(path, slides_dir).replace("\\", "/")
+        except ValueError:
+            rel_audio = "audio/" + os.path.basename(path)
         audio_tags += f'<audio id="audio-{i}" src="{rel_audio}" preload="auto"></audio>\n'
 
     html = f"""<!DOCTYPE html>
@@ -323,6 +335,30 @@ def build_html(slides, audio_paths, image_path=None, scene_path=None):
     flex-direction: column;
     justify-content: center;
     max-width: 60%;
+  }}
+
+  .topic-cat {{
+    position: absolute;
+    right: 28px;
+    bottom: 28px;
+    width: 280px;
+    height: 280px;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+    animation: catIn 0.8s 0.3s ease forwards;
+  }}
+
+  .topic-cat img {{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25));
+  }}
+
+  @keyframes catIn {{
+    to {{ opacity: 1; transform: translateY(0) scale(1); }}
   }}
 
   .topic-label {{

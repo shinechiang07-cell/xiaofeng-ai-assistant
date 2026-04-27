@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小峰自我介紹</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+    background: linear-gradient(135deg, #1a1d24 0%, #0d1117 50%, #1a1d24 100%);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .slide-wrapper {
+    width: 100%;
+    max-width: 960px;
+    height: 90vh;
+    max-height: 600px;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #1f2530;
+    border-radius: 24px;
+    padding: 48px 56px;
+    box-shadow: 0 16px 64px rgba(80,150,255,0.2);
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
+    background: linear-gradient(180deg, #eb0a1e, #b00818);
+    border-radius: 24px 0 0 24px;
+  }
+
+  /* Intro slide */
+  .intro-slide .hero {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    height: 100%;
+  }
+
+  .cat-image {
+    flex-shrink: 0;
+    width: 280px;
+    height: 280px;
+    background: linear-gradient(135deg, #2a3040, #1a1f2c);
+    border-radius: 24px;
+    overflow: hidden;
+    border: 3px solid rgba(235,10,30,0.4);
+    box-shadow: 0 8px 32px rgba(235,10,30,0.25);
+  }
+
+  .cat-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .subtitle {
+    color: #eb0a1e;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    color: #f5f5f5;
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .tagline {
+    color: #a8b8d0;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Topic slide (主題頁，仿三師爸版型但淡藍系) */
+  .topic-slide {
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
+    padding: 0;
+    color: white;
+  }
+
+  .topic-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      rgba(15,17,22,0.88) 0%,
+      rgba(20,28,40,0.78) 40%,
+      rgba(20,28,40,0.3) 70%,
+      rgba(20,28,40,0.0) 100%);
+    border-radius: 24px;
+  }
+
+  .topic-content {
+    position: relative;
+    z-index: 2;
+    padding: 56px 60px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 60%;
+  }
+
+  .topic-cat {
+    position: absolute;
+    right: 28px;
+    bottom: 28px;
+    width: 280px;
+    height: 280px;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+    animation: catIn 0.8s 0.3s ease forwards;
+  }
+
+  .topic-cat img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25));
+  }
+
+  @keyframes catIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .topic-label {
+    color: #eb0a1e;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .topic-title {
+    color: #f5f5f5;
+    font-size: 60px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 16px rgba(235,10,30,0.3);
+  }
+
+  .topic-subtitle {
+    color: #b8c4d6;
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+    font-weight: 500;
+  }
+
+  .topic-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .topic-bullet, .topic-example {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(31,37,48,0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(235,10,30,0.25);
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 16px;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: bulletIn 0.5s ease forwards;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  .slide.active .topic-bullet:nth-child(1) { animation-delay: 0.4s; }
+  .slide.active .topic-bullet:nth-child(2) { animation-delay: 0.7s; }
+  .slide.active .topic-bullet:nth-child(3) { animation-delay: 1.0s; }
+  .slide.active .topic-bullet:nth-child(4) { animation-delay: 1.3s; }
+  .slide.active .topic-example { animation-delay: 1.6s; }
+
+  @keyframes bulletIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .bullet-tag {
+    color: #ff4d5c;
+    font-weight: 900;
+    font-size: 16px;
+    flex-shrink: 0;
+    min-width: 24px;
+  }
+
+  .bullet-text {
+    color: #e8eef8;
+    font-weight: 500;
+  }
+
+  .topic-example {
+    background: rgba(0,48,135,0.35);
+    border-color: rgba(80,140,240,0.4);
+    margin-top: 6px;
+  }
+
+  .example-tag {
+    color: #6ba0ff;
+    font-weight: 900;
+    flex-shrink: 0;
+    min-width: 24px;
+  }
+
+  .example-text {
+    color: #d8e4ff;
+    font-style: italic;
+  }
+
+  /* Ending slide background */
+  .ending-slide {
+    background-size: cover;
+    background-position: center;
+  }
+
+  .ending-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      rgba(0,0,0,0.85) 0%,
+      rgba(20,5,10,0.75) 100%);
+    border-radius: 24px;
+  }
+
+  .ending-slide .ending-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .ending-slide h1 {
+    color: #eb0a1e;
+    text-shadow: 0 4px 20px rgba(235,10,30,0.5);
+  }
+
+  .ending-slide .subtitle {
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* Content slide */
+  .content-slide h2 {
+    color: #1a3a6e;
+    font-size: 44px;
+    font-weight: 900;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #5ba8ff;
+    display: inline-block;
+  }
+
+  .bullets {
+    list-style: none;
+    padding: 0;
+  }
+
+  .bullets li {
+    color: #334466;
+    font-size: 22px;
+    line-height: 1.8;
+    padding: 14px 20px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, #f0f8ff, transparent);
+    border-left: 4px solid #5ba8ff;
+    border-radius: 8px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s ease forwards;
+  }
+
+  .slide.active .bullets li:nth-child(1) { animation-delay: 0.3s; }
+  .slide.active .bullets li:nth-child(2) { animation-delay: 0.7s; }
+  .slide.active .bullets li:nth-child(3) { animation-delay: 1.1s; }
+  .slide.active .bullets li:nth-child(4) { animation-delay: 1.5s; }
+  .slide.active .bullets li:nth-child(5) { animation-delay: 1.9s; }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Ending slide */
+  .ending-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .ending-image {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto 24px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(235,10,30,0.4);
+    border: 3px solid rgba(235,10,30,0.5);
+    animation: floatUp 3s ease-in-out infinite;
+  }
+
+  .ending-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .ending-slide h1 {
+    font-size: 72px;
+    margin-bottom: 16px;
+  }
+
+  .ending-slide .subtitle {
+    font-size: 24px;
+    color: #5577aa;
+  }
+
+  /* Page number */
+  .page-num {
+    position: absolute;
+    bottom: 20px;
+    right: 32px;
+    color: #6b7a91;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Controls */
+  .controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    background: rgba(31,37,48,0.9);
+    padding: 8px 16px;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+
+  .controls button {
+    background: linear-gradient(135deg, #eb0a1e, #c00818);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(91,168,255,0.4);
+  }
+
+  .controls button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #eb0a1e, #ff6b78);
+    z-index: 200;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .start-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(219,238,255,0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+  }
+
+  .start-overlay .start-card {
+    background: white;
+    padding: 48px 64px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 16px 64px rgba(80,150,255,0.3);
+  }
+
+  .start-overlay .start-card h2 {
+    color: #1a3a6e;
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  .start-overlay .start-card p {
+    color: #5577aa;
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .start-overlay .start-btn {
+    background: linear-gradient(135deg, #eb0a1e, #c00818);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 20px rgba(91,168,255,0.4);
+  }
+</style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <div class="container">
+    <div class="slide-wrapper">
+      
+        <div class="slide intro-slide">
+          <div class="hero">
+            <div class="cat-image"><img src="xiaofeng_car_intro_20260427_184045.png" alt="小峰"></div>
+            <div class="hero-text">
+              <div class="subtitle">2026 購車比較完整解析</div>
+              <h1>Toyota Yaris Cross</h1>
+              <div class="tagline">「老師說話，我來動手，順便把課變有趣。」</div>
+            </div>
+          </div>
+          <div class="page-num">1 / 7</div>
+        </div>
+        
+        <div class="slide topic-slide" style="background-image: url(yaris_bg_20260427_183851.png);">
+          <div class="topic-overlay"></div>
+          <div class="topic-content">
+            <div class="topic-label">車型概覽 ①</div>
+            <h1 class="topic-title">三個等級怎麼選</h1>
+            <div class="topic-subtitle">Yaris Cross 在台灣常見三種配置</div>
+            <div class="topic-bullets">
+              
+            <div class="topic-bullet">
+              <span class="bullet-tag">(a)</span>
+              <span class="bullet-text">入門型（Entry）：基本配備，預算優先選擇</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(b)</span>
+              <span class="bullet-text">中階型（Mid）：CP 值最高、最熱銷的版本</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(c)</span>
+              <span class="bullet-text">頂級型（Top）：完整 TSS 主動安全、皮椅內裝</span>
+            </div>
+            
+              
+            <div class="topic-example">
+              <span class="example-tag">例</span>
+              <span class="example-text">建議：如果預算允許，直上中階；要安全配備就選頂級</span>
+            </div>
+            
+            </div>
+          </div>
+          <div class="topic-cat"><img src="xiaofeng_car_levels_20260427_184124.png" alt="小峰"></div>
+          <div class="page-num">2 / 7</div>
+        </div>
+        
+        <div class="slide topic-slide" style="background-image: url(yaris_bg_20260427_183851.png);">
+          <div class="topic-overlay"></div>
+          <div class="topic-content">
+            <div class="topic-label">動力系統 ②</div>
+            <h1 class="topic-title">1.5L 自然進氣動力</h1>
+            <div class="topic-subtitle">和 Corolla Cross Hybrid 的關鍵差異</div>
+            <div class="topic-bullets">
+              
+            <div class="topic-bullet">
+              <span class="bullet-tag">(a)</span>
+              <span class="bullet-text">Yaris Cross：1.5L NA 自然進氣引擎</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(b)</span>
+              <span class="bullet-text">Corolla Cross：1.8L 油電混合 Hybrid</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(c)</span>
+              <span class="bullet-text">差別：油耗、稅金、保養成本與起步加速感</span>
+            </div>
+            
+              
+            <div class="topic-example">
+              <span class="example-tag">例</span>
+              <span class="example-text">市區短距離通勤 → Yaris Cross 夠用；常跑長途 → Corolla Hybrid 較省</span>
+            </div>
+            
+            </div>
+          </div>
+          <div class="topic-cat"><img src="xiaofeng_car_engine_20260427_184214.png" alt="小峰"></div>
+          <div class="page-num">3 / 7</div>
+        </div>
+        
+        <div class="slide topic-slide" style="background-image: url(yaris_bg_20260427_183851.png);">
+          <div class="topic-overlay"></div>
+          <div class="topic-content">
+            <div class="topic-label">停車優勢 ③</div>
+            <h1 class="topic-title">尺寸小，市區好停</h1>
+            <div class="topic-subtitle">機械停車與路邊停車的關鍵指標</div>
+            <div class="topic-bullets">
+              
+            <div class="topic-bullet">
+              <span class="bullet-tag">(a)</span>
+              <span class="bullet-text">車長約 4.18 米，比 Corolla Cross 短一截</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(b)</span>
+              <span class="bullet-text">車寬 1.77 米，台灣機械停車格通用</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(c)</span>
+              <span class="bullet-text">迴轉半徑小，狹窄巷弄轉向更靈活</span>
+            </div>
+            
+              
+            <div class="topic-example">
+              <span class="example-tag">例</span>
+              <span class="example-text">台北市區、機械車位、舊式公寓停車場 → Yaris Cross 更友善</span>
+            </div>
+            
+            </div>
+          </div>
+          <div class="topic-cat"><img src="xiaofeng_car_parking_20260427_184307.png" alt="小峰"></div>
+          <div class="page-num">4 / 7</div>
+        </div>
+        
+        <div class="slide topic-slide" style="background-image: url(yaris_bg_20260427_183851.png);">
+          <div class="topic-overlay"></div>
+          <div class="topic-content">
+            <div class="topic-label">安全配備 ④</div>
+            <h1 class="topic-title">TSS 主動安全亮點</h1>
+            <div class="topic-subtitle">Toyota Safety Sense 第三代</div>
+            <div class="topic-bullets">
+              
+            <div class="topic-bullet">
+              <span class="bullet-tag">(a)</span>
+              <span class="bullet-text">PCS 預警式防護：自動緊急煞車含路口偵測</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(b)</span>
+              <span class="bullet-text">DRCC 動態雷達巡航：高速跟車不費力</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(c)</span>
+              <span class="bullet-text">LTA 車道循跡輔助：長途減輕疲勞</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(d)</span>
+              <span class="bullet-text">BSM 盲點偵測：變換車道更安心（部分等級）</span>
+            </div>
+            
+              
+            <div class="topic-example">
+              <span class="example-tag">例</span>
+              <span class="example-text">強烈建議至少選有完整 TSS 的等級</span>
+            </div>
+            
+            </div>
+          </div>
+          <div class="topic-cat"><img src="xiaofeng_car_safety_20260427_184348.png" alt="小峰"></div>
+          <div class="page-num">5 / 7</div>
+        </div>
+        
+        <div class="slide topic-slide" style="background-image: url(yaris_bg_20260427_183851.png);">
+          <div class="topic-overlay"></div>
+          <div class="topic-content">
+            <div class="topic-label">購買建議 ⑤</div>
+            <h1 class="topic-title">誰適合買 Yaris Cross？</h1>
+            <div class="topic-subtitle">三句話總結</div>
+            <div class="topic-bullets">
+              
+            <div class="topic-bullet">
+              <span class="bullet-tag">(a)</span>
+              <span class="bullet-text">預算 80-100 萬，要新車且首選 SUV 造型</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(b)</span>
+              <span class="bullet-text">市區為主，停車空間有限的家庭</span>
+            </div>
+            
+            <div class="topic-bullet">
+              <span class="bullet-tag">(c)</span>
+              <span class="bullet-text">對油電不在意，重視保養便利與保值</span>
+            </div>
+            
+              
+            <div class="topic-example">
+              <span class="example-tag">例</span>
+              <span class="example-text">若年里程超過 2 萬公里、常跑高速 → 改看 Corolla Cross Hybrid</span>
+            </div>
+            
+            </div>
+          </div>
+          <div class="topic-cat"><img src="xiaofeng_car_advice_20260427_184414.png" alt="小峰"></div>
+          <div class="page-num">6 / 7</div>
+        </div>
+        
+        <div class="slide ending-slide" style="background-image: url(yaris_bg_20260427_183851.png);">
+          <div class="ending-overlay"></div>
+          <div class="ending-content">
+            <div class="ending-image"><img src="xiaofeng_car_ending_20260427_184449.png" alt="小峰"></div>
+            <h1>老師決定看哪台？</h1>
+            <div class="subtitle">需要試駕清單或殺價策略嗎？</div>
+          </div>
+          <div class="page-num">7 / 7</div>
+        </div>
+        
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="prevBtn" onclick="prevSlide()">◀ 上一頁</button>
+    <button id="playBtn" onclick="togglePlay()">⏸ 暫停</button>
+    <button id="nextBtn" onclick="nextSlide()">下一頁 ▶</button>
+  </div>
+
+  <audio id="audio-0" src="audio_yaris/slide_0.mp3" preload="auto"></audio>
+<audio id="audio-1" src="audio_yaris/slide_1.mp3" preload="auto"></audio>
+<audio id="audio-2" src="audio_yaris/slide_2.mp3" preload="auto"></audio>
+<audio id="audio-3" src="audio_yaris/slide_3.mp3" preload="auto"></audio>
+<audio id="audio-4" src="audio_yaris/slide_4.mp3" preload="auto"></audio>
+<audio id="audio-5" src="audio_yaris/slide_5.mp3" preload="auto"></audio>
+<audio id="audio-6" src="audio_yaris/slide_6.mp3" preload="auto"></audio>
+
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    let current = 0;
+    let isPlaying = true;
+    let currentAudio = null;
+
+    function showSlide(idx) {
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === idx);
+      });
+      document.getElementById('progress').style.width = ((idx + 1) / total * 100) + '%';
+    }
+
+    function playAudio(idx) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      const audio = document.getElementById('audio-' + idx);
+      if (!audio) return;
+      currentAudio = audio;
+      audio.currentTime = 0;
+      audio.play().catch(e => console.log('播放失敗:', e));
+
+      audio.onended = () => {
+        if (isPlaying && current < total - 1) {
+          setTimeout(() => nextSlide(), 800);
+        }
+      };
+    }
+
+    function nextSlide() {
+      if (current < total - 1) {
+        current++;
+        showSlide(current);
+        if (isPlaying) playAudio(current);
+      }
+    }
+
+    function prevSlide() {
+      if (current > 0) {
+        current--;
+        showSlide(current);
+        if (isPlaying) playAudio(current);
+      }
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('playBtn');
+      if (isPlaying) {
+        btn.textContent = '⏸ 暫停';
+        if (currentAudio) currentAudio.play();
+      } else {
+        btn.textContent = '▶ 播放';
+        if (currentAudio) currentAudio.pause();
+      }
+    }
+
+    // 鍵盤控制
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'p') togglePlay();
+    });
+
+    // 初始顯示第一頁，立刻嘗試自動播放
+    showSlide(0);
+    let started = false;
+    function tryAutoStart() {
+      if (started) return;
+      started = true;
+      playAudio(0);
+    }
+
+    // 嘗試立刻播放（成功則完成；失敗則等使用者第一次互動）
+    window.addEventListener('load', () => {
+      const audio = document.getElementById('audio-0');
+      if (audio) {
+        const promise = audio.play();
+        if (promise !== undefined) {
+          promise.then(() => { started = true; audio.onended = () => { if (isPlaying && current < total - 1) setTimeout(() => nextSlide(), 800); }; })
+                 .catch(() => {
+                   // 自動播放被擋下，等任何點擊或按鍵
+                   document.addEventListener('click', tryAutoStart, { once: true });
+                   document.addEventListener('keydown', tryAutoStart, { once: true });
+                 });
+        }
+      }
+    });
+  </script>
+</body>
+</html>
