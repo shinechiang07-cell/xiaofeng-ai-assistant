@@ -14,7 +14,7 @@ from full_present import generate_all_audio, build_html
 # 各頁對應的小峰角色圖（相對 slides/，去背版）
 CAT_IMG = {
     "intro": "xiaofeng_car_intro_20260427_184045_nobg.png",
-    "levels": "xiaofeng_car_levels_20260427_184124_nobg.png",
+    "levels": "xiaofeng_car_levels_v2_20260427_190155_nobg.png",
     "engine": "xiaofeng_car_engine_20260427_184214_nobg.png",
     "parking": "xiaofeng_car_parking_20260427_184307_nobg.png",
     "safety": "xiaofeng_car_safety_20260427_184348_nobg.png",
