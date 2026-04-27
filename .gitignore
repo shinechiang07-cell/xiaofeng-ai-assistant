@@ -9,8 +9,7 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Generated audio (太大且可重新生成)
-slides/audio/
+# 音訊檔保留以供 GitHub Pages 部署
 
 # 環境變數與金鑰
 .env
