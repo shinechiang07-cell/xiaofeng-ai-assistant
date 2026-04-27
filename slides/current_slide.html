@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小峰 — 大家好，我是小峰！</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+    background: #0f0f1a;
+    color: #e8e8f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(123,104,238,0.3);
+    border-radius: 20px;
+    padding: 48px 56px;
+    max-width: 860px;
+    width: 100%;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+    animation: fadeIn 0.6s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #7b68ee;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  h1 {
+    color: #f8c94a;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 28px;
+    letter-spacing: -0.5px;
+  }
+  .content {
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.9;
+    color: #e8e8f0;
+  }
+  .content ul {
+    list-style: none;
+    padding: 0;
+  }
+  .content li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    border-bottom: 1px solid rgba(123,104,238,0.3);
+  }
+  .content li:last-child { border-bottom: none; }
+  .content li::before {
+    content: '🦊';
+    position: absolute;
+    left: 0;
+    font-size: 16px;
+  }
+  .content p { margin-bottom: 12px; }
+  .footer {
+    margin-top: 32px;
+    font-size: 13px;
+    color: #7b68ee;
+    opacity: 0.7;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">🦊 小峰助教 · 12:30</div>
+    <h1>大家好，我是小峰！</h1>
+    
+    <div class="content"><ul><li>我是老師的 AI 助教，住在 Claude Code 裡</li><li>我的形象是一隻聰明的小狐狸🦊</li><li>我會出題、備課、播簡報、生圖</li><li>今天讓我們開始吧！</li></ul></div>
+    <div class="footer">由 小峰 生成 · Claude Code</div>
+  </div>
+</body>
+</html>
